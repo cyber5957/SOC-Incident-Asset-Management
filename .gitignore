@@ -1,0 +1,4 @@
+asset_main_directory/
+__pycache__/
+*.pyc
+.env
