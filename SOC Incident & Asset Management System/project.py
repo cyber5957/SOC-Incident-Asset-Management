@@ -1,4 +1,3 @@
-
 class Asset:
 
     def __init__(self, asset_id, hostname, ip_address, owner, status):
@@ -46,6 +45,7 @@ class Laptop(Asset):
 
 
 class Server(Asset):
+    
     def __init__(self, asset_id, hostname, ip_address, owner, status, operating_system, ram , cpu_cores, server_role):
         super().__init__(asset_id, hostname, ip_address, owner, status)
         self.operating_system = operating_system
