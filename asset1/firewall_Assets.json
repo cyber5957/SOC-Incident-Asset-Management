@@ -1,0 +1,12 @@
+[
+    {
+        "asset_id": "001",
+        "hostname": "vinu",
+        "ip_address": "192.168.1.1",
+        "owner": "vinayak",
+        "status": "live",
+        "vendor": "cisco",
+        "model": "catalyst",
+        "firmware_version": "68.242"
+    }
+]

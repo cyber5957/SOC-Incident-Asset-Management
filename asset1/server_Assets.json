@@ -1,0 +1,13 @@
+[
+    {
+        "asset_id": "001",
+        "hostname": "server",
+        "ip_address": "192.168.0.1",
+        "owner": "vinayak",
+        "status": "deployed",
+        "operating_system": "cisco",
+        "ram": "32",
+        "cpu_cores": "56",
+        "server_role": "networking"
+    }
+]

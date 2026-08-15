@@ -1,3 +1,7 @@
+import json
+
+from pathlib import Path
+
 class Asset:
 
     def __init__(self, asset_id, hostname, ip_address, owner, status):
@@ -38,6 +42,19 @@ class Laptop(Asset):
         storage = input("enter storage:- ")
         return cls(*base_Details, os , ram, storage)
 
+    def to_dict(self):
+        """Converts object attributes into a dictionary for clean JSON serialization."""
+        return {
+            "asset_id": self.asset_id,
+            "hostname": self.hostname,
+            "ip_address": self.ip_address,
+            "owner": self.owner,
+            "status": self.status,
+            "operating_system": self.operating_system,
+            "ram": self.ram,
+            "storage": self.storage
+        }
+
     def __str__(self):
         base_str = super().__str__()
         return f"{base_str} | OS: {self.operating_system} | RAM: {self.ram} | Storage: {self.storage}"
@@ -63,6 +80,20 @@ class Server(Asset):
         server_role = input("enter server role:- ")
         return cls(*base_Details, os, ram, cpu_cores, server_role)
 
+    def to_dict(self):
+            """Converts object attributes into a dictionary for clean JSON serialization."""
+            return {
+                "asset_id": self.asset_id,
+                "hostname": self.hostname,
+                "ip_address": self.ip_address,
+                "owner": self.owner,
+                "status": self.status,
+                "operating_system": self.operating_system,
+                "ram": self.ram,
+                "cpu_cores" : self.cpu_cores,
+                "server_role":self.server_role,
+            }
+
     def __str__(self):
         base_str=  super().__str__()
         return f"{base_str} | os: {self.operating_system} | RAM: {self.ram} |CPU CORES: {self.cpu_cores} | SERVER ROLE: {self.server_role}"
@@ -82,17 +113,88 @@ class Firewall(Asset):
         firmware = input("enter firmware version:- ")
         return cls(*base_Details,vendor, model, firmware )
 
+    def to_dict(self):
+                """Converts object attributes into a dictionary for clean JSON serialization."""
+                return {
+                    "asset_id": self.asset_id,
+                    "hostname": self.hostname,
+                    "ip_address": self.ip_address,
+                    "owner": self.owner,
+                    "status": self.status,
+                    "vendor": self.vendor,
+                    "model": self.model,
+                    "firmware_version": self.firmware_Version
+                }
+
     def __str__(self):
         base_str = super().__str__()
         return f"{base_str}| vendor : {self.vendor} | model : {self.model} | firmware version: {self.firmware_Version} "
 
-#make a folder
-from pathlib import Path
 
-asset1 = Path("asset_main_directory")
+    
 
-asset1.mkdir(exist_ok=True)
+#make a folder/ laptop saving json code 
+def save_asset(asset_obj):
 
+    folder_path = Path("asset1")
+    folder_path.mkdir(exist_ok=True)
+
+    file_path = folder_path / "Laptop_assets.json"
+
+    if file_path.exists():
+        with open(file_path, "r") as file:
+            assets = json.load(file)
+    else:
+        assets = []
+
+    assets.append(asset_obj.to_dict())
+
+    with open(file_path, "w") as file:
+        json.dump(assets, file, indent=4)
+
+    print(f"////----successfully saved to {file_path.resolve()}----////")
+
+#server saving json code
+def server_save_assets(asset_obj):
+     folder_path = Path("asset1")
+     folder_path.mkdir(exist_ok=True)
+
+
+     file_path = folder_path / "server_Assets.json"
+
+     if file_path.exists():
+          with open(file_path, "r") as file:
+               assets = json.load(file)
+     else:
+         assets = []
+
+     assets.append(asset_obj.to_dict())
+
+     with open(file_path, "w") as file:
+          json.dump(assets, file, indent=4)
+
+     print(f"////----successfully saved to {file_path.resolve()}----////")
+
+# firewall saving json code 
+def firewall_save_assets(asset_obj):
+     folder_path = Path("asset1")
+     folder_path.mkdir(exist_ok=True)
+
+
+     file_path = folder_path / "firewall_Assets.json"
+
+     if file_path.exists():
+          with open(file_path, "r") as file:
+               assets = json.load(file)
+     else:
+         assets = []
+
+     assets.append(asset_obj.to_dict())
+
+     with open(file_path, "w") as file:
+          json.dump(assets, file, indent=4)
+
+     print(f"////----successfully saved to {file_path.resolve()}----////")
 
 #registering_Asset_type and asset registration by specific file name 
 def asset_type():
@@ -103,68 +205,23 @@ def asset_type():
 >>>  """)
 
     if asset_Registration_Selection == "1" or asset_Registration_Selection.strip().lower()== "laptop":
-         Laptop_result_dict = {}
-         filename = "Laptop_assets.txt"
-         file_path = asset1/ filename
-         with open(file_path, "a") as file:
-          file.write(f"{Laptop.laptop_specific_assets()} \n")
-          print(f"////----successfully saved to {file_path.resolve()}----////")
-         
-         with open(file_path, "r") as file:
-            for line in file:
-             if not line.strip():
-                continue
-         
-             attributes = line.strip().split("|")
-             for attribute in attributes:
-              if ":" in attribute:
-                              
-               key,Value = attribute.split(":",1)               
-               Laptop_result_dict[key.strip()] = Value.strip()
-            
+         laptop_instance = Laptop.laptop_specific_assets()
+
+         save_asset(laptop_instance)
+
 
     elif asset_Registration_Selection == "2" or asset_Registration_Selection.strip().lower()== "server":
-             server_result_dict = {}
-             filename = "Server_assets.txt"
-             file_path = asset1/ filename
-             with open(file_path, "a") as file:
-                    file.write(f"{Server.server_specific_assets()} \n") 
-                    print(f"////----successfully saved to {file_path.resolve()}----////")
+             server_instance = Server.server_specific_assets()
 
-             with open(file_path, "r") as file:
-                for line in file:
-                    if not line.strip():
-                     continue
+             server_save_assets(server_instance)
 
-                    attributes = line.strip().split("|")
-                    for attribute in attributes:
-                      if ":" in attribute:
-                     
-                       key,Value = attribute.split(":",1)
-                       server_result_dict[key.strip()] = Value.strip()
 
+    elif asset_Registration_Selection == "3" or asset_Registration_Selection.strip().lower() == "firewall":
+      firewall_instance = Firewall.firewall_specific_details()
+
+      firewall_save_assets(firewall_instance)
     
-    elif asset_Registration_Selection == "3" or asset_Registration_Selection.strip().lower()== "firewall":
-             firewall_result_dict = {}
-             filename = "Firewall_assets.txt"
-             file_path = asset1/ filename
-             with open(file_path, "a") as file:
-                    file.write(f"{Firewall.firewall_specific_details()} \n")
-                    print(f"////----successfully saved to {file_path.resolve()}----////")
-
-             with open(file_path, "r") as file:
-                for line in file:
-                 if not line.strip():
-                  continue
-                    
-                 attributes = line.strip().split("|")
-                 for attribute in attributes:
-                  if ":" in attribute:
-                                     
-                   key,Value = attribute.split(":",1)                
-                   firewall_result_dict[key.strip()] = Value.strip()
                 
-
     else:
         print("////----Please select the type of asset that is given in the option---////")
         return
@@ -257,7 +314,8 @@ def resource_viewing_by_choice():
      else:
           print("////---please select the valid input to view your resources----////")
           return
-        
+
+
 
 
 

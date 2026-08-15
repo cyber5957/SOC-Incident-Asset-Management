@@ -1,0 +1,12 @@
+{
+    "asset_id": "001",
+     "hostname": "kali",
+      "ip_address": "192.168.1.1",
+       "owner": "vinayak",
+        "status": "live",
+        "operating_system": "kali",
+         "ram": "16", 
+         "storage": "512"
+}
+
+
