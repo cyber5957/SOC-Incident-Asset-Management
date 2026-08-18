@@ -2,6 +2,8 @@ import json
 
 from pathlib import Path
 
+import asyncio
+
 class Asset:
 
     def __init__(self, asset_id, hostname, ip_address, owner, status):
@@ -226,6 +228,10 @@ def asset_type():
         print("////----Please select the type of asset that is given in the option---////")
         return
 
+def search_Assets():
+     pass 
+
+
 
 #resource viewing by searching 
 def resource_Viewing_by_search():
@@ -237,12 +243,25 @@ def resource_Viewing_by_search():
      >>> """)
 
      if asset_search_input == "1" or asset_search_input.lower().strip() == "laptop":
-          print("////----search laptop assets by: ----//// ")
+          search_Assets()
      elif asset_search_input == "2" or asset_search_input.strip().lower() == "Server":
           print("////----search Server assets by: ----//// ")
      elif asset_search_input == "3" or asset_search_input.strip().lower() == "Firewall":
           print("////----search Firewall assets by: ----//// ")
 
+
+def resource_viewing_by_choice():
+     print("////----select the type of viewing you want to do of the assets ----////")
+     viewing_options = input("""1: view by searching :
+2: just viewing by asset type
+>>> """)
+     if viewing_options == "1" or viewing_options.lower() == "view by searching":
+          resource_Viewing_by_search()
+     elif viewing_options == "2" or viewing_options.lower() == "just viewing by asset type":
+          resource_viewing()
+     else:
+          print("////---please select the valid input to view your resources----////")
+          return
 
 #resource viewing
 def resource_viewing():
@@ -253,7 +272,7 @@ def resource_viewing():
 >>>  """)
 
     if asset_Viewing == "1" or asset_Viewing.strip().lower() == "laptop":
-        laptop_asset_path_view = Path("asset_main_directory") / "laptop_assets.txt"
+        laptop_asset_path_view = Path("asset1") / "laptop_assets.json"
         if laptop_asset_path_view.exists():
          print("////----THE ASSETS EXISTS AND HERE ARE ITS CONTENTS/DATA----//// ")
         else:
@@ -268,14 +287,12 @@ def resource_viewing():
               
     
     elif asset_Viewing == "2" or asset_Viewing.strip().lower() == "server":
-         Server_asset_path_view = Path("asset_main_directory") / "Server_assets.txt"
+         Server_asset_path_view = Path("asset1") / "Server_Assets.json"
          if Server_asset_path_view.exists():
                   print("////----THE ASSETS EXISTS AND HERE ARE ITS CONTENTS/DATA----//// ")
          else:
                   print("///---- the ASSETS does not exists, please register the asset first ----////")
                   return
-         
-
          
          with open(Server_asset_path_view, "r") as file:
                        lines= file.readlines()
@@ -284,7 +301,7 @@ def resource_viewing():
              print(line.strip())
     
     elif asset_Viewing == "3" or asset_Viewing.strip().lower() == "firewall":
-         Firewall_asset_path_view = Path("asset_main_directory") / "Firewall_assets.txt"
+         Firewall_asset_path_view = Path("asset1") / "Firewall_Assets.json"
          if Firewall_asset_path_view.exists():
                   print("////----THE assets EXISTS AND HERE ARE ITS CONTENTS/DATA----//// ")
          else:
@@ -302,19 +319,6 @@ def resource_viewing():
          print("////----please select form the existing options----////")
 
 #resource viewing by choice
-def resource_viewing_by_choice():
-     print("////----select the type of viewing you want to do of the assets ----////")
-     viewing_options = input("""1: view by searching :
-2: just viewing by asset type
->>> """)
-     if viewing_options == "1" or viewing_options.lower() == "view by searching":
-          resource_Viewing_by_search()
-     elif viewing_options == "2" or viewing_options.lower() == "just viewing by asset type":
-          resource_viewing()
-     else:
-          print("////---please select the valid input to view your resources----////")
-          return
-
 
 
 
@@ -338,8 +342,6 @@ else:
     exit()
 
 #authentication function\ for now it is sleep only 
-import asyncio
-
 async def main():
     print("---Authenticating---\n")
     await asyncio.sleep(2)
@@ -359,7 +361,7 @@ if work_selection == "1" or work_selection.strip().lower() == "Registering Asset
     asset_type()
 
 elif work_selection == "2" or work_selection.strip().lower() == "View Your Resources":
-    resource_viewing()
+    resource_viewing_by_choice()
 
 elif work_selection == "3" or work_selection.strip().lower() == "Update The Existing Assets":
     resource_or_asset_updating()
