@@ -228,8 +228,101 @@ def asset_type():
         print("////----Please select the type of asset that is given in the option---////")
         return
 
-def search_Assets():
-     pass 
+
+#search by attribute and key value
+def search_Assets_laptop():
+     print("////---- Enter the attribute and the value you want to search with----////") 
+              
+     def load_assets(): 
+                  with open(Path("asset1")/"laptop_assets.json", "r") as file: 
+                      assets = json.load(file) 
+                  return assets 
+          
+     asset_load = load_assets() 
+     attribute_input = input("Attribute >>> ").strip() 
+     value_input = input("Value >>> ").strip() 
+     found = False 
+              
+     for asset in asset_load: 
+                  # FIX: If the element is a string, convert it to a dictionary
+                  if isinstance(asset, str):
+                      try:
+                          asset = json.loads(asset)
+                      except json.JSONDecodeError:
+                          continue # Skip if it's completely malformed text
+                          
+                  # Safe lookup using .get() to prevent crashes
+                  if isinstance(asset, dict):
+                      if str(asset.get(attribute_input)) == value_input: 
+                          print(asset) 
+                          found = True 
+                          
+                  if not found: 
+                   print(f"no matching assets {attribute_input} with value {value_input} were found ")
+
+
+def search_Assets_server(): 
+    print("////---- Enter the attribute and the value you want to search with----////") 
+    
+    def load_assets(): 
+        with open(Path("asset1")/"server_assets.json", "r") as file: 
+            assets = json.load(file) 
+        return assets 
+
+    asset_load = load_assets() 
+    attribute_input = input("Attribute >>> ").strip() 
+    value_input = input("Value >>> ").strip() 
+    found = False 
+    
+    for asset in asset_load: 
+        # FIX: If the element is a string, convert it to a dictionary
+        if isinstance(asset, str):
+            try:
+                asset = json.loads(asset)
+            except json.JSONDecodeError:
+                continue # Skip if it's completely malformed text
+                
+        # Safe lookup using .get() to prevent crashes
+        if isinstance(asset, dict):
+            if str(asset.get(attribute_input)) == value_input: 
+                print(asset) 
+                found = True 
+                
+    if not found: 
+        print(f"no matching assets {attribute_input} with value {value_input} were found ")
+
+
+def search_Asset_firewall():
+     print("////---- Enter the attribute and the value you want to search with----////") 
+         
+     def load_assets(): 
+             with open(Path("asset1")/"firewall_assets.json", "r") as file: 
+                 assets = json.load(file) 
+             return assets 
+     
+     asset_load = load_assets() 
+     attribute_input = input("Attribute >>> ").strip() 
+     value_input = input("Value >>> ").strip() 
+     found = False 
+         
+     for asset in asset_load: 
+             # FIX: If the element is a string, convert it to a dictionary
+             if isinstance(asset, str):
+                 try:
+                     asset = json.loads(asset)
+                 except json.JSONDecodeError:
+                     continue # Skip if it's completely malformed text
+                     
+             # Safe lookup using .get() to prevent crashes
+             if isinstance(asset, dict):
+                 if str(asset.get(attribute_input)) == value_input: 
+                     print(asset) 
+                     found = True 
+                     
+             if not found: 
+              print(f"no matching assets {attribute_input} with value {value_input} were found ")
+     
+     
 
 
 
@@ -243,9 +336,9 @@ def resource_Viewing_by_search():
      >>> """)
 
      if asset_search_input == "1" or asset_search_input.lower().strip() == "laptop":
-          search_Assets()
+          search_Assets_laptop()
      elif asset_search_input == "2" or asset_search_input.strip().lower() == "Server":
-          print("////----search Server assets by: ----//// ")
+          search_Assets_server()
      elif asset_search_input == "3" or asset_search_input.strip().lower() == "Firewall":
           print("////----search Firewall assets by: ----//// ")
 

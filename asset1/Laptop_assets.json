@@ -1,4 +1,4 @@
-{
+[ {
     "asset_id": "001",
      "hostname": "kali",
       "ip_address": "192.168.1.1",
@@ -8,5 +8,6 @@
          "ram": "16", 
          "storage": "512"
 }
+]
 
 
