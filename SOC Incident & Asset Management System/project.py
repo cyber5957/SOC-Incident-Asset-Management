@@ -414,13 +414,56 @@ def resource_viewing():
 #resource viewing by choice
 
 
+'''def before_asset_update_authentication():
+     async def main():
+      print("---Authenticating---\n")
+      await asyncio.sleep(2)
+      print("---authenticated---")'''
+
+
+'''def resource_asset_updating():
+     print(f"what do you want to upgrade in the  {asset_id_input} : ")
+
+     with open(Path("asset")/ "Laptop_asset.json") as file:
+      assets = json.load(file)
+
+      for asset in assets:
+           if asset.get("asset_id") == asset_id_input:
+            print(f"////---- key inside asset {asset_id_input}----////")
+
+
+           for key in asset.key():
+             print(key)    
+
+             break'''
+
 
 
 #resource or asset updating
-def resource_or_asset_updating():
-    pass
+def resource_or_asset_before_updating():
+    
+    print("////----enter the asset type you want to update----////")
+    asset_update_type = input("""1: laptop
+    2: server
+    3: firewall
+    >>> """)
 
+    if asset_update_type == "1" or asset_update_type.strip().lower() == "laptop":
+         asset_id_input = input("enter the asset id: ")
+         with open(Path("asset1")/"Laptop_assets.json", "r") as file:
+            id_found = json.load(file)
 
+         for user in id_found:
+              if user["asset_id"] == asset_id_input:
+                   print("found")
+
+              display_json = json.dumps(user, indent=4)
+              print(display_json)
+
+              break
+         else:
+              print(f"the {asset_id_input} was not found ")
+    
 #introduction section 
 print("//////////------welcome to the soc incident and asset management system------/////////")\
 
@@ -457,4 +500,7 @@ elif work_selection == "2" or work_selection.strip().lower() == "View Your Resou
     resource_viewing_by_choice()
 
 elif work_selection == "3" or work_selection.strip().lower() == "Update The Existing Assets":
-    resource_or_asset_updating()
+    #before_asset_update_authentication()
+    resource_or_asset_before_updating()
+    #resource_asset_updating()
+
