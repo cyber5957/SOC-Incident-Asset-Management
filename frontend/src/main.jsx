@@ -369,7 +369,7 @@ function InventoryPanel(props) {
         })}
       </div>
       {showFilters && (
-        <div className="filter-drawer" aria-label="Status filters">
+        <div className="filter-drawer" role="region" aria-label="Status filters">
           <div>
             <strong>Asset status</strong>
             <span>Filters use the current asset records only.</span>
@@ -440,7 +440,7 @@ function AssetRow({ asset, onOpenAsset }) {
     <tr>
       <td>
         <div className="asset-name">
-          <span className={`asset-icon ${meta.tone}`} aria-label={meta.label} title={meta.label}><Icon size={17} /></span>
+          <span className={`asset-icon ${meta.tone}`} aria-hidden="true" title={meta.label}><Icon size={17} /></span>
           <div><strong>{asset.hostname}</strong><small>{asset.type} <span>#{asset.asset_id}</span> · {asset.source || 'browser session'}</small></div>
         </div>
       </td>
@@ -460,7 +460,7 @@ function AssetCard({ asset, onOpenAsset }) {
   return (
     <article className="asset-card">
       <div className="asset-card-head">
-        <span className={`asset-icon ${meta.tone}`} aria-label={meta.label} title={meta.label}><Icon size={17} /></span>
+        <span className={`asset-icon ${meta.tone}`} aria-hidden="true" title={meta.label}><Icon size={17} /></span>
         <div><strong>{asset.hostname}</strong><small>{asset.type} #{asset.asset_id} · {asset.source || 'browser session'}</small></div>
         <StatusBadge status={asset.status} />
       </div>

@@ -9,4 +9,13 @@ npm install
 npm run dev
 ```
 
+For Lighthouse or other performance telemetry, measure the production bundle:
+
+```bash
+npm run build
+npm start
+```
+
+The development server includes HMR and development versions of React, so its network payload is not representative of a deployed build.
+
 The current UI seeds itself from the existing sample records and stores newly registered assets in browser `localStorage`. A future Express API can replace `loadAssets` and `addAsset` in `src/main.jsx` without changing the Python flow.

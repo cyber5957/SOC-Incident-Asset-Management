@@ -1,0 +1,19 @@
+# Blue Team Asset Console
+
+> A browser-based blue-team asset visibility console for reviewing defensive coverage across laptops, servers, and firewalls.
+
+## Pages
+
+- [Blue team asset dashboard](/)
+- [Frontend documentation](/README.md)
+
+## Capabilities
+
+- Review protected assets and monitored coverage.
+- Filter assets by type, status, hostname, owner, and IP address.
+- Register a laptop, server, or firewall asset.
+- Open an asset profile to inspect defensive metadata.
+
+## Data and scope
+
+The dashboard reads the existing JSON records in the `asset1` directory and keeps newly registered browser-session records in local storage. The Python CLI remains unchanged and is the source of truth for the existing project flow.
