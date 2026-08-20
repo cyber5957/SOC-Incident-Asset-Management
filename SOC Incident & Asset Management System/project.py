@@ -424,7 +424,9 @@ def resource_viewing():
 def resource_asset_updating_laptop():
       print("////----welcome to updating asset section----////")
 
-      with open(Path("asset1")/"laptop_assets.json", "r")as file:
+      FILE_PATH = Path("asset1") / "laptop_assets.json"
+
+      with open(FILE_PATH, "r")as file:
            data_load = json.load(file)
            if len(data_load)> 0:
                 print("////----the following are the available keys----////")
@@ -471,7 +473,7 @@ def resource_asset_updating_laptop():
 
                 laptop[attribute_input] = new_update_value
 
-                with open(Path("asset1")/"laptop_asset.json", "w") as file:
+                with open(FILE_PATH, "w") as file:
                      json.dump(data_load, file, indent=4)
                 print(
                     f"{attribute_input} successfully updated to "
@@ -488,8 +490,9 @@ def resource_asset_updating_laptop():
 
 def resource_asset_updating_server():
      print("////----welcome to updating asset section----////")
+     FILE_PATH = Path("asset1") / "server_Assets.json"
      
-     with open(Path("asset1")/"server_Assets.json", "r")as file:
+     with open(FILE_PATH, "r")as file:
                 data_load = json.load(file)
                 if len(data_load)> 0:
                      print("////----the following are the available keys----////")
@@ -536,7 +539,7 @@ def resource_asset_updating_server():
      
                      laptop[attribute_input] = new_update_value
      
-                     with open(Path("asset1")/"server_Asset.json", "w") as file:
+                     with open(FILE_PATH, "w") as file:
                           json.dump(data_load, file, indent=4)
                      print(
                          f"{attribute_input} successfully updated to "
@@ -553,8 +556,10 @@ def resource_asset_updating_server():
 
 def resource_asset_updating_firewall():
      print("////----welcome to updating asset section----////")
+     FILE_PATH = Path("asset1") / "firewall_Assets.json"
+
      
-     with open(Path("asset1")/"firewall_Assets.json", "r")as file:
+     with open(FILE_PATH, "r")as file:
                 data_load = json.load(file)
                 if len(data_load)> 0:
                      print("////----the following are the available keys----////")
@@ -601,7 +606,7 @@ def resource_asset_updating_firewall():
      
                      laptop[attribute_input] = new_update_value
      
-                     with open(Path("asset1")/"firewall_Asset.json", "w") as file:
+                     with open(FILE_PATH, "w") as file:
                           json.dump(data_load, file, indent=4)
                      print(
                          f"{attribute_input} successfully updated to "
