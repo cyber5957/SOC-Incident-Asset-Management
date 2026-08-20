@@ -432,12 +432,48 @@ def resource_asset_updating():
 
            else:
                 print("the json file is empty")
+                return
+           
+      asset_id_input = input("Enter Asset ID >>> ").strip()
+      for laptop in data_load:
 
-      print("////----Enter the attribute you want to update----////")
-      
-        
+        if laptop["asset_id"] == asset_id_input:
 
+            print("\n////---- ASSET FOUND ----////")
 
+           
+            for key, value in laptop.items():
+                print(f"{key}: {value}")
+
+            
+            print("\n////---- Available Attributes ----////")
+
+            for key in laptop.keys():
+                print(f"- {key}")
+
+            
+            attribute_input = input(
+                "\nEnter the attribute you want to update >>> "
+            ).strip()
+
+           
+            if attribute_input in laptop:
+
+                print("\nAttribute exists!")
+
+                
+                print(
+                    f"Current value of {attribute_input}: "
+                    f"{laptop[attribute_input]}"
+                )
+
+            else:
+                print(f"Invalid attribute: {attribute_input}")
+
+            break
+
+      else:
+        print(f"Asset ID {asset_id_input} was not found.")
 
 #resource or asset updating
 def resource_or_asset_before_updating():
