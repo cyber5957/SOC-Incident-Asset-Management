@@ -38,7 +38,9 @@ const jsonSources = [
 ];
 
 const sourceAssets = jsonSources.flatMap(([source, type, records]) => (
-  Array.isArray(records) ? records.map((record) => ({ ...record, type, source })) : []
+  Array.isArray(records)
+    ? records.map((record, index) => ({ ...record, type, source, uid: `source-${type}-${index}-${record.asset_id || 'asset'}` }))
+    : []
 ));
 
 const typeMeta = {
@@ -100,11 +102,25 @@ const blankForm = {
 
 function loadAssets() {
   try {
+    const inventory = JSON.parse(localStorage.getItem('soc-assets-inventory'));
+    if (Array.isArray(inventory)) return inventory.map(ensureAssetUid);
+
     const saved = JSON.parse(localStorage.getItem('soc-assets-session'));
-    return Array.isArray(saved) ? [...sourceAssets, ...saved] : sourceAssets;
+    return Array.isArray(saved) ? [...sourceAssets, ...saved.map(ensureAssetUid)] : sourceAssets;
   } catch {
     return sourceAssets;
   }
+}
+
+function ensureAssetUid(asset, index = 0) {
+  if (asset.uid) return asset;
+  const origin = asset.source && asset.source !== 'browser session' ? 'source' : 'session';
+  return { ...asset, uid: `${origin}-${asset.type || 'Asset'}-${index}-${asset.asset_id || Date.now()}` };
+}
+
+function saveInventory(nextAssets) {
+  localStorage.setItem('soc-assets-inventory', JSON.stringify(nextAssets));
+  localStorage.setItem('soc-assets-session', JSON.stringify(nextAssets.filter((asset) => asset.source === 'browser session')));
 }
 
 function normalize(value) {
@@ -162,14 +178,30 @@ function App() {
   }), [lastSync]);
 
   function addAsset(form) {
-    const sessionAsset = { ...form, asset_id: form.asset_id || String(Date.now()).slice(-4), source: 'browser session' };
-    const saved = JSON.parse(localStorage.getItem('soc-assets-session') || '[]');
-    const nextSessionAssets = Array.isArray(saved) ? [...saved, sessionAsset] : [sessionAsset];
-    const next = [...sourceAssets, ...nextSessionAssets];
+    const generatedId = String(Date.now()).slice(-4);
+    const sessionAsset = {
+      ...form,
+      asset_id: form.asset_id || generatedId,
+      source: 'browser session',
+      uid: `session-${form.type}-${generatedId}-${Date.now()}`
+    };
+    const next = [...assets, sessionAsset];
     setAssets(next);
-    localStorage.setItem('soc-assets-session', JSON.stringify(nextSessionAssets));
+    saveInventory(next);
     setShowForm(false);
     setNotice(`${form.type} asset added to this browser session`);
+    window.setTimeout(() => setNotice(''), 3200);
+  }
+
+  function updateAsset(assetUid, attribute, value) {
+    const next = assets.map((asset) => (
+      asset.uid === assetUid ? { ...asset, [attribute]: value } : asset
+    ));
+    const updatedAsset = next.find((asset) => asset.uid === assetUid);
+    setAssets(next);
+    setSelectedAsset(updatedAsset || null);
+    saveInventory(next);
+    setNotice(`${attribute.replaceAll('_', ' ')} updated for ${updatedAsset?.hostname || 'asset'}`);
     window.setTimeout(() => setNotice(''), 3200);
   }
 
@@ -222,7 +254,7 @@ function App() {
         </footer>
         {notice && <div className="toast" role="status"><Check size={16} /> {notice}</div>}
         {showForm && <AssetForm onClose={() => setShowForm(false)} onSubmit={addAsset} />}
-        {selectedAsset && <AssetProfile asset={selectedAsset} onClose={() => setSelectedAsset(null)} />}
+        {selectedAsset && <AssetProfile asset={selectedAsset} onClose={() => setSelectedAsset(null)} onUpdate={updateAsset} />}
       </main>
     </div>
   );
@@ -503,8 +535,8 @@ function DataSourceStrip({ assets }) {
   return (
     <section className="source-strip" aria-label="Asset data sources">
       <div><FileJson size={17} /><strong>JSON inventory source</strong><span>{sourceAssets.length} records loaded from asset1</span></div>
-      <div><Database size={17} /><strong>Session additions</strong><span>{sessionCount} browser-session records</span></div>
-      <div><RefreshCw size={17} /><strong>Backend status</strong><span>Python CLI unchanged</span></div>
+      <div><Database size={17} /><strong>Browser workspace</strong><span>{sessionCount} added records plus saved edits</span></div>
+      <div><RefreshCw size={17} /><strong>Update flow</strong><span>Asset attributes editable in the profile</span></div>
     </section>
   );
 }
@@ -609,7 +641,7 @@ function AssetForm({ onClose, onSubmit }) {
             </>
           )}
         </div>
-        <p className="integration-note">Frontend validation covers obvious input mistakes. The existing Python backend remains authoritative for saved project records.</p>
+        <p className="integration-note">Frontend validation covers obvious input mistakes. New records and edits are saved in this browser workspace.</p>
         <div className="modal-actions">
           <button type="button" className="cancel-button" onClick={onClose}>Cancel</button>
           <button className="new-button" type="submit"><Plus size={17} /> Add to inventory</button>
@@ -632,10 +664,19 @@ function Field({ label, value, onChange, error, required, suffix }) {
   );
 }
 
-function AssetProfile({ asset, onClose }) {
+function AssetProfile({ asset, onClose, onUpdate }) {
   const meta = typeMeta[asset.type] || typeMeta.Laptop;
   const Icon = meta.icon;
-  const editableFields = ['hostname', 'ip_address', 'owner', 'status', ...meta.fields.map(([key]) => key)];
+  const editableFields = ['asset_id', 'hostname', 'ip_address', 'owner', 'status', ...meta.fields.map(([key]) => key)];
+  const [attribute, setAttribute] = useState(editableFields[0]);
+  const [newValue, setNewValue] = useState('');
+  const [editError, setEditError] = useState('');
+
+  useEffect(() => {
+    setAttribute(editableFields[0]);
+    setNewValue('');
+    setEditError('');
+  }, [asset.uid]);
 
   useEffect(() => {
     const closeOnEscape = (event) => {
@@ -644,6 +685,21 @@ function AssetProfile({ asset, onClose }) {
     window.addEventListener('keydown', closeOnEscape);
     return () => window.removeEventListener('keydown', closeOnEscape);
   }, [onClose]);
+
+  function submitUpdate(event) {
+    event.preventDefault();
+    if (!editableFields.includes(attribute)) {
+      setEditError('Invalid attribute');
+      return;
+    }
+    if (!newValue.trim()) {
+      setEditError('Enter a new value');
+      return;
+    }
+    onUpdate(asset.uid, attribute, newValue.trim());
+    setNewValue('');
+    setEditError('');
+  }
 
   return (
     <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -673,12 +729,14 @@ function AssetProfile({ asset, onClose }) {
         </div>
         <div className="profile-section update-preview">
           <h3>Edit asset</h3>
-          <p>Prepared for the upcoming backend update flow. Saving is intentionally disabled until the Python update path is connected.</p>
-          <div className="edit-grid">
-            <label>Select attribute<select disabled>{editableFields.map((field) => <option key={field}>{field.replaceAll('_', ' ')}</option>)}</select></label>
-            <label>New value<input disabled placeholder="Backend integration pending" /></label>
-            <button className="secondary-button" type="button" disabled>Save changes</button>
-          </div>
+          <p>Select an attribute, confirm the current value, then save the replacement value for this browser inventory.</p>
+          <form className="edit-grid" onSubmit={submitUpdate}>
+            <label>Select attribute<select value={attribute} onChange={(event) => { setAttribute(event.target.value); setNewValue(''); setEditError(''); }}>{editableFields.map((field) => <option key={field} value={field}>{field.replaceAll('_', ' ')}</option>)}</select></label>
+            <label>Current value<input value={asset[attribute] || ''} readOnly /></label>
+            <label>New value<input value={newValue} onChange={(event) => { setNewValue(event.target.value); setEditError(''); }} placeholder="Enter updated value" aria-invalid={Boolean(editError)} /></label>
+            <button className="secondary-button" type="submit"><Check size={15} /> Save changes</button>
+          </form>
+          {editError && <p className="form-error" role="alert">{editError}</p>}
         </div>
       </section>
     </div>
