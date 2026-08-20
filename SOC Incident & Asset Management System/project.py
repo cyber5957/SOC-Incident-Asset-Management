@@ -421,21 +421,21 @@ def resource_viewing():
       print("---authenticated---")'''
 
 
-'''def resource_asset_updating():
-     print(f"what do you want to upgrade in the  {asset_id_input} : ")
+def resource_asset_updating():
+      print("////----welcome to updating asset section----////")
 
-     with open(Path("asset")/ "Laptop_asset.json") as file:
-      assets = json.load(file)
+      with open(Path("asset1")/"laptop_assets.json", "r")as file:
+           data_load = json.load(file)
+           if len(data_load)> 0:
+                print("////----the following are the available keys----////")
+                print(list(data_load[0].keys()))
 
-      for asset in assets:
-           if asset.get("asset_id") == asset_id_input:
-            print(f"////---- key inside asset {asset_id_input}----////")
+           else:
+                print("the json file is empty")
 
-
-           for key in asset.key():
-             print(key)    
-
-             break'''
+      print("////----Enter the attribute you want to update----////")
+      
+        
 
 
 
@@ -457,10 +457,10 @@ def resource_or_asset_before_updating():
               if user["asset_id"] == asset_id_input:
                    print("found")
 
-              display_json = json.dumps(user, indent=4)
-              print(display_json)
+                   display_json = json.dumps(user, indent=4)
+                   print(display_json)
 
-              break
+                   break
          else:
               print(f"the {asset_id_input} was not found ")
     
@@ -500,7 +500,6 @@ elif work_selection == "2" or work_selection.strip().lower() == "View Your Resou
     resource_viewing_by_choice()
 
 elif work_selection == "3" or work_selection.strip().lower() == "Update The Existing Assets":
-    #before_asset_update_authentication()
-    resource_or_asset_before_updating()
-    #resource_asset_updating()
+   # resource_or_asset_before_updating()
+    resource_asset_updating()
 
