@@ -421,7 +421,7 @@ def resource_viewing():
       print("---authenticated---")'''
 
 
-def resource_asset_updating():
+def resource_asset_updating_laptop():
       print("////----welcome to updating asset section----////")
 
       with open(Path("asset1")/"laptop_assets.json", "r")as file:
@@ -466,8 +466,19 @@ def resource_asset_updating():
                     f"Current value of {attribute_input}: "
                     f"{laptop[attribute_input]}"
                 )
+                print("////----enter the new value you want to update----////")
+                new_update_value = input(">>>>  ")
 
-            else:
+                laptop[attribute_input] = new_update_value
+
+                with open(Path("asset1")/"laptop_asset.json", "w") as file:
+                     json.dump(data_load, file, indent=4)
+                print(
+                    f"{attribute_input} successfully updated to "
+                    f"{laptop[attribute_input]}"
+                )
+            
+            else: 
                 print(f"Invalid attribute: {attribute_input}")
 
             break
@@ -475,8 +486,137 @@ def resource_asset_updating():
       else:
         print(f"Asset ID {asset_id_input} was not found.")
 
+def resource_asset_updating_server():
+     print("////----welcome to updating asset section----////")
+     
+     with open(Path("asset1")/"server_Assets.json", "r")as file:
+                data_load = json.load(file)
+                if len(data_load)> 0:
+                     print("////----the following are the available keys----////")
+                     print(list(data_load[0].keys()))
+     
+                else:
+                     print("the json file is empty")
+                     return
+                
+                asset_id_input = input("Enter Asset ID >>> ").strip()
+                for laptop in data_load:
+     
+                 if laptop["asset_id"] == asset_id_input:
+     
+                  print("\n////---- ASSET FOUND ----////")
+     
+                
+                 for key, value in laptop.items():
+                     print(f"{key}: {value}")
+     
+                 
+                 print("\n////---- Available Attributes ----////")
+     
+                 for key in laptop.keys():
+                     print(f"- {key}")
+     
+                 
+                 attribute_input = input(
+                     "\nEnter the attribute you want to update >>> "
+                 ).strip()
+     
+                
+                 if attribute_input in laptop:
+     
+                     print("\nAttribute exists!")
+     
+                     
+                     print(
+                         f"Current value of {attribute_input}: "
+                         f"{laptop[attribute_input]}"
+                     )
+                     print("////----enter the new value you want to update----////")
+                     new_update_value = input(">>>>  ")
+     
+                     laptop[attribute_input] = new_update_value
+     
+                     with open(Path("asset1")/"server_Asset.json", "w") as file:
+                          json.dump(data_load, file, indent=4)
+                     print(
+                         f"{attribute_input} successfully updated to "
+                         f"{laptop[attribute_input]}"
+                     )
+                 
+                 else: 
+                     print(f"Invalid attribute: {attribute_input}")
+     
+                 break
+     
+                else:
+                 print(f"Asset ID {asset_id_input} was not found.")
+
+def resource_asset_updating_firewall():
+     print("////----welcome to updating asset section----////")
+     
+     with open(Path("asset1")/"firewall_Assets.json", "r")as file:
+                data_load = json.load(file)
+                if len(data_load)> 0:
+                     print("////----the following are the available keys----////")
+                     print(list(data_load[0].keys()))
+     
+                else:
+                     print("the json file is empty")
+                     return
+                
+                asset_id_input = input("Enter Asset ID >>> ").strip()
+                for laptop in data_load:
+     
+                 if laptop["asset_id"] == asset_id_input:
+     
+                  print("\n////---- ASSET FOUND ----////")
+     
+                
+                 for key, value in laptop.items():
+                     print(f"{key}: {value}")
+     
+                 
+                 print("\n////---- Available Attributes ----////")
+     
+                 for key in laptop.keys():
+                     print(f"- {key}")
+     
+                 
+                 attribute_input = input(
+                     "\nEnter the attribute you want to update >>> "
+                 ).strip()
+     
+                
+                 if attribute_input in laptop:
+     
+                     print("\nAttribute exists!")
+     
+                     
+                     print(
+                         f"Current value of {attribute_input}: "
+                         f"{laptop[attribute_input]}"
+                     )
+                     print("////----enter the new value you want to update----////")
+                     new_update_value = input(">>>>  ")
+     
+                     laptop[attribute_input] = new_update_value
+     
+                     with open(Path("asset1")/"firewall_Asset.json", "w") as file:
+                          json.dump(data_load, file, indent=4)
+                     print(
+                         f"{attribute_input} successfully updated to "
+                         f"{laptop[attribute_input]}"
+                     )
+                 
+                 else: 
+                     print(f"Invalid attribute: {attribute_input}")
+     
+                 break
+     
+                else:
+                 print(f"Asset ID {asset_id_input} was not found.")
 #resource or asset updating
-def resource_or_asset_before_updating():
+def resource_or_asset_updating():
     
     print("////----enter the asset type you want to update----////")
     asset_update_type = input("""1: laptop
@@ -485,20 +625,11 @@ def resource_or_asset_before_updating():
     >>> """)
 
     if asset_update_type == "1" or asset_update_type.strip().lower() == "laptop":
-         asset_id_input = input("enter the asset id: ")
-         with open(Path("asset1")/"Laptop_assets.json", "r") as file:
-            id_found = json.load(file)
-
-         for user in id_found:
-              if user["asset_id"] == asset_id_input:
-                   print("found")
-
-                   display_json = json.dumps(user, indent=4)
-                   print(display_json)
-
-                   break
-         else:
-              print(f"the {asset_id_input} was not found ")
+         resource_asset_updating_laptop()
+    elif asset_update_type == "2" or asset_update_type.strip().lower() == "server":
+         resource_asset_updating_server()
+    elif asset_update_type == "3" or asset_update_type.strip().lower() == "firewall":
+         resource_asset_updating_firewall()
     
 #introduction section 
 print("//////////------welcome to the soc incident and asset management system------/////////")\
@@ -536,6 +667,6 @@ elif work_selection == "2" or work_selection.strip().lower() == "View Your Resou
     resource_viewing_by_choice()
 
 elif work_selection == "3" or work_selection.strip().lower() == "Update The Existing Assets":
-   # resource_or_asset_before_updating()
-    resource_asset_updating()
+    resource_or_asset_updating()
+  
 
