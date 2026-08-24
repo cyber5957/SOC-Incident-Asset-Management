@@ -230,6 +230,7 @@ function App() {
           <Metric label="Critical infrastructure" value={counts.servers} detail="Server fleet in scope" icon={<Server size={18} />} tone="blue" />
           <Metric label="Needs triage" value={counts.attention} detail="Status review required" icon={<CircleAlert size={18} />} tone="coral" />
         </section>
+        <CoveragePosture counts={counts} />
         <InventoryPanel
           assets={assets}
           activeType={activeType}
@@ -339,6 +340,28 @@ function Metric({ label, value, detail, icon, tone }) {
       <strong>{value}</strong>
       <small>{detail}</small>
     </article>
+  );
+}
+
+function CoveragePosture({ counts }) {
+  const coverage = counts.total ? Math.round((counts.monitored / counts.total) * 100) : 0;
+  const posture = coverage >= 90 ? 'Strong coverage' : coverage >= 70 ? 'Stable coverage' : 'Coverage gap';
+  const postureTone = coverage >= 90 ? 'strong' : coverage >= 70 ? 'stable' : 'gap';
+
+  return (
+    <section className="posture-band" aria-label="Coverage posture">
+      <div className={`posture-score ${postureTone}`}>
+        <div className="posture-ring" style={{ '--coverage': `${coverage}%` }}><strong>{coverage}%</strong><span>covered</span></div>
+        <div><p className="eyebrow">CURRENT POSTURE</p><h2>{posture}</h2><p>Controls with a live or deployed status are counted as monitored.</p></div>
+      </div>
+      <div className="posture-divider" />
+      <div className="posture-next">
+        <span className="posture-label"><CircleAlert size={15} /> NEXT ACTION</span>
+        <strong>{counts.attention ? `Review ${counts.attention} asset${counts.attention === 1 ? '' : 's'}` : 'Keep inventory current'}</strong>
+        <span> {counts.attention ? 'Resolve offline or review statuses to improve defensive visibility.' : 'All registered assets are currently monitored.'}</span>
+      </div>
+      <div className="posture-total"><span>Scope</span><strong>{counts.total}</strong><small>registered assets</small></div>
+    </section>
   );
 }
 
