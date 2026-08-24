@@ -1,15 +1,17 @@
 # SOC Incident & Asset Management System
 
-A Python-based proof-of-concept SOC asset management application. This project registers and stores organizational security assets using object-oriented design and file-based persistence.
+A proof-of-concept SOC asset management application with a Python CLI and a React/Vite dashboard. The project registers and stores security assets for laptops, servers, and firewalls.
 
 ## Project Overview
 
-This repository contains a simple SOC Incident & Asset Management System written in Python. The application is designed to:
+This repository contains a Python command-line application and a browser-based blue-team asset console. Together they are designed to:
 
 - collect asset details for laptops, servers, and firewalls
 - store asset records in separate text files
 - support a basic authorization check for admin or SOC manager roles
 - display stored asset information from asset files
+- provide a dashboard for reviewing asset coverage, status, and triage needs
+- register and edit assets from the browser workspace
 
 ## Current Features
 
@@ -38,11 +40,16 @@ This repository contains a simple SOC Incident & Asset Management System written
 
 ## Project Structure
 
-The repository currently includes:
+The repository includes:
 
-- `project.py` — main application script
-- `asset_main_directory/` — folder created at runtime to store asset files
+- `SOC Incident & Asset Management System/project.py` — main Python CLI application
+- `asset1/` — sample JSON inventory records used by the frontend
+- `frontend/` — React/Vite blue-team asset dashboard
+- `frontend/src/main.jsx` — dashboard components and inventory behavior
+- `frontend/src/styles.css` — responsive dashboard styling
 - `README.md` — project documentation
+
+The Python CLI creates `asset_main_directory/` at runtime to store text-based asset files.
 
 ## Getting Started
 
@@ -60,6 +67,32 @@ The repository currently includes:
    python project.py
    ```
 3. Follow the command-line prompts to authorize, authenticate, and register or view assets.
+
+### Run the Frontend
+
+Requirements: Node.js and npm.
+
+1. Open a terminal in the `frontend` folder:
+  ```bash
+  cd frontend
+  ```
+2. Install dependencies:
+  ```bash
+  npm install
+  ```
+3. Start the development server:
+  ```bash
+  npm run dev
+  ```
+4. Open the local URL printed by Vite, usually `http://127.0.0.1:5173/`.
+
+Create a production bundle with:
+
+```bash
+npm run build
+```
+
+The dashboard loads sample JSON records from `asset1/`. New records and browser edits are stored in local storage; the Python CLI remains independent and continues to use file-based storage.
 
 ## Usage
 
