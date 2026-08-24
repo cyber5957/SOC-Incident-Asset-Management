@@ -635,6 +635,93 @@ def resource_or_asset_updating():
          resource_asset_updating_server()
     elif asset_update_type == "3" or asset_update_type.strip().lower() == "firewall":
          resource_asset_updating_firewall()
+
+#asset deletion functions 
+
+
+def asset_deletion_laptop():
+     asset_deletion_id = input("enter the asset id: ")
+     FILE_PATH = Path("asset1")/"Laptop_asset.json"
+
+     with open(FILE_PATH, "r")as file:
+            data_load = json.load(file)
+            for index, laptop in enumerate(data_load):
+                 if laptop["asset_id"] == asset_deletion_id:
+                        print("////----ASSET FOUND----////")
+                        print(laptop)
+                        confirmation = input("Are you sure you want to delete this asset? (yes/no): ")
+                        if confirmation.strip().lower() == "yes":
+                             del data_load[index]
+                             with open(FILE_PATH, "w") as file:
+                                json.dump(data_load, file, indent=4)
+                             print(f"Asset with ID {asset_deletion_id} has been deleted.")
+                        else:
+                             print("Deletion cancelled.")
+                        break
+            else:
+                 print(f"Asset ID {asset_deletion_id} was not found.")
+
+def asset_deletion_server():
+        asset_deletion_id = input("enter the asset id: ")
+        FILE_PATH = Path("asset1")/"server_Assets.json"
+    
+        with open(FILE_PATH, "r")as file:
+                data_load = json.load(file)
+                for index, server in enumerate(data_load):
+                    if server["asset_id"] == asset_deletion_id:
+                            print("////----ASSET FOUND----////")
+                            print(server)
+                            confirmation = input("Are you sure you want to delete this asset? (yes/no): ")
+                            if confirmation.strip().lower() == "yes":
+                                del data_load[index]
+                                with open(FILE_PATH, "w") as file:
+                                    json.dump(data_load, file, indent=4)
+                                print(f"Asset with ID {asset_deletion_id} has been deleted.")
+                            else:
+                                print("Deletion cancelled.")
+                            break
+                else:
+                    print(f"Asset ID {asset_deletion_id} was not found.")
+
+                    
+def asset_deletion_firewall():
+     asset_deletion_id = input("enter the asset id: ")
+     FILE_PATH = Path("asset1")/"firewall_Assets.json"
+
+     with open(FILE_PATH, "r")as file:
+            data_load = json.load(file)
+            for index, firewall in enumerate(data_load):
+                 if firewall["asset_id"] == asset_deletion_id:
+                        print("////----ASSET FOUND----////")
+                        print(firewall)
+                        confirmation = input("Are you sure you want to delete this asset? (yes/no): ")
+                        if confirmation.strip().lower() == "yes":
+                             del data_load[index]
+                             with open(FILE_PATH, "w") as file:
+                                json.dump(data_load, file, indent=4)
+                             print(f"Asset with ID {asset_deletion_id} has been deleted.")
+                        else:
+                             print("Deletion cancelled.")
+                        break
+            else:
+                 print(f"Asset ID {asset_deletion_id} was not found.")
+
+
+# asset deletion asset type selection 
+def asset_deletion():
+     print("////----welcome to asset deletion----////")
+     asset_selection_deletion = input("""enter the asset you want to delete 
+     1 : laptop \n
+     2 : server \n
+     3: firewall \n
+     >>>  """)
+
+     if asset_selection_deletion == "1" or asset_selection_deletion.strip().lower() == "laptop":
+              asset_deletion_laptop()
+     elif asset_selection_deletion == "2" or asset_selection_deletion.strip().lower() == "server":
+               asset_deletion_server()
+     elif asset_selection_deletion == "3" or asset_selection_deletion.strip().lower() == "firewall":
+               asset_deletion_firewall()
     
 #introduction section 
 print("//////////------welcome to the soc incident and asset management system------/////////")\
@@ -663,6 +750,8 @@ print("///////------ Please select the type of work you want to do -------//////
 work_selection = input("""1: Registering Assets \n
 2:  View Your Resources \n
 3: Update the Existing Assets \n
+4 : delete asset \n
+5: exit \n
 >>>  """)
 
 if work_selection == "1" or work_selection.strip().lower() == "Registering Assets":
@@ -673,5 +762,11 @@ elif work_selection == "2" or work_selection.strip().lower() == "View Your Resou
 
 elif work_selection == "3" or work_selection.strip().lower() == "Update The Existing Assets":
     resource_or_asset_updating()
-  
+
+elif work_selection == "4" or work_selection.strip().lower() == "delete asset":
+     asset_deletion()
+
+elif work_selection == "5" or work_selection.strip().lower() == "exit":
+     exit()
+
 
