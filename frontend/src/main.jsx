@@ -12,6 +12,7 @@ import {
   FileJson,
   Laptop,
   Layers3,
+  LockKeyhole,
   Menu,
   Network,
   Plus,
@@ -133,6 +134,14 @@ function formatValue(value, suffix) {
 }
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  return isAuthenticated
+    ? <DashboardApp />
+    : <AuthScreen onAuthenticated={() => setIsAuthenticated(true)} />;
+}
+
+function DashboardApp() {
   const [assets, setAssets] = useState(loadAssets);
   const [activeType, setActiveType] = useState('All assets');
   const [activeStatus, setActiveStatus] = useState('All statuses');
@@ -258,6 +267,48 @@ function App() {
         {selectedAsset && <AssetProfile asset={selectedAsset} onClose={() => setSelectedAsset(null)} onUpdate={updateAsset} />}
       </main>
     </div>
+  );
+}
+
+function AuthScreen({ onAuthenticated }) {
+  const [role, setRole] = useState('');
+  const [error, setError] = useState('');
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const normalizedRole = role.trim().toLowerCase();
+    if (normalizedRole === 'admin' || normalizedRole === 'soc manager') {
+      onAuthenticated();
+      return;
+    }
+    setError('Access is limited to admin or soc manager for this demo.');
+  }
+
+  return (
+    <main className="auth-shell">
+      <section className="auth-panel" aria-labelledby="auth-title">
+        <div className="auth-brand"><div className="brand-mark"><Activity size={19} /></div><span>sentinel<span className="brand-dot">.</span>ops</span></div>
+        <div className="auth-icon"><LockKeyhole size={22} /></div>
+        <p className="eyebrow">BLUE TEAM OPERATIONS</p>
+        <h1 id="auth-title">Sign in to your workspace</h1>
+        <p className="auth-copy">Authenticate before opening the defensive asset inventory.</p>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <label htmlFor="role">Access role</label>
+          <input
+            id="role"
+            value={role}
+            onChange={(event) => { setRole(event.target.value); setError(''); }}
+            placeholder="admin or soc manager"
+            autoComplete="username"
+            autoFocus
+            required
+          />
+          <button className="new-button auth-submit" type="submit"><LockKeyhole size={16} /> Continue securely</button>
+          {error && <p className="form-error" role="alert">{error}</p>}
+        </form>
+        <div className="auth-note"><span className="pulse" /> Demo authentication is ready for backend integration</div>
+      </section>
+    </main>
   );
 }
 
