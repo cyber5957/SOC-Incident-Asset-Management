@@ -8,5 +8,15 @@
         "operating_system": "kali",
         "ram": "16",
         "storage": "512"
+    },
+    {
+        "asset_id": "001",
+        "hostname": "lapi1",
+        "ip_address": "192.168.3.2",
+        "owner": "vinayak",
+        "status": "live ",
+        "operating_system": "kali linux",
+        "ram": "16",
+        "storage": "512"
     }
 ]
